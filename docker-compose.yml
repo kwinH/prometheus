@@ -1,0 +1,38 @@
+version: '3.2'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.31.1
+    container_name: prometheus
+    user: root
+    restart: always    #重启方案
+    privileged: true  
+    ports:    #端口映射
+      - 9090:9090       
+    volumes:
+      - type: bind
+        source: ./config/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+       #read_only: true
+    networks:
+      - web
+
+  grafana:
+    image: grafana/grafana:8.2.5
+    container_name: grafana
+    user: root
+    restart: always    #重启方案
+    privileged: true
+    ports:    #端口映射
+      - 3000:3000
+    volumes:
+      - type: bind
+        source: ./grafana
+        target: /var/lib/grafana
+       #read_only: true
+    networks:
+      - web
+
+networks:
+  web:
+    external: true # 不创建network

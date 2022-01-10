@@ -1,0 +1,30 @@
+version: '3.2'
+
+services:
+  node-exporter:
+    image: prom/node-exporter:v1.3.0
+    container_name: node-exporter
+    restart: always    #重启方案
+#    ports:    #端口映射
+#      - 9100:9100
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.textfile.directory=/node_exporter/prom'
+    user: root
+    volumes:
+      - type: bind
+        source: /
+        target: /rootfs
+        read_only: true
+      - type: bind
+        source: /sys
+        target: /host/sys
+        read_only: true
+      - type: bind
+        source: /proc
+        target: /host/proc
+        read_only: true
+    network_mode: host
+    pid: "host"

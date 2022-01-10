@@ -1,0 +1,21 @@
+version: '3.2'
+
+services:
+    nginx-exporter:
+        image: nginx/nginx-prometheus-exporter
+        container_name: nginx-exporter
+        hostname: nginx-exporter
+        restart: always
+        ports:
+            - "9113:9113"
+        networks:
+            - web              
+#        network_mode: "host"
+        command: -nginx.scrape-uri http://172.16.15.156/nginx_status
+#networks:
+#    exporter:
+#      driver: host      
+
+networks:
+  web:
+    external: true # 不创建network
